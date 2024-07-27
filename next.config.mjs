@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {    experimental: {
-    serverActions: true,
-    serverComponentsExternalPackages: ['mongoose']
-  },
+const nextConfig = {  
   images: {
     domains: ['community.akamai.steamstatic.com']
   }
