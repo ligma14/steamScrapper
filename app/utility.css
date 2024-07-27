@@ -1,0 +1,24 @@
+#root {
+    max-width: 1280px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+body {
+    width: 100dvw;
+    height:100%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+html, body{
+    overflow-x:hidden;
+    min-height:100%;
+}
+.nav-height{
+    height: calc(100vh - 60px);
+}
+
+input[type="search" i]::-webkit-search-cancel-button {
+    display: none;
+}
