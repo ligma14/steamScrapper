@@ -1,6 +1,6 @@
 'use client'
 import { scrapeAndStoreProduct } from '@/lib/actions'
-import { Input } from './Input'
+import { Input } from './input'
 import { cn } from '@/lib/utils'
 import { FormEvent, useState } from 'react'
 
