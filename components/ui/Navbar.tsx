@@ -16,7 +16,7 @@ const navbar = () => {
           ))}
         </ul>
         <ul className='flex items-center gap-7 max-sm:justify-end max-sm:flex-1 cursor-pointer'>
-          <li><a href=""><img src="/search.svg" alt="" /></a></li>
+          <li><a href="https://github.com/ligma14/steamScrapper"><img src="/search.svg" alt="" /></a></li>
           <li className='opacity-50 hover:opacity-100 transition-all'><a href=""><img src="/github.svg" alt="" /></a></li>
         </ul>
       </nav>

@@ -4,7 +4,6 @@
 
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import ButtonAC from "./ButtonAC";
 import HeroSearch from "./HeroSearch";
 
 const herosection = () => {
@@ -18,14 +17,13 @@ const herosection = () => {
       <div className="h-5/6 w-full flex justify-center flex-col font-black gap-10">
         <div className="text-left flex flex-col gap-10">
           <div className="flex flex-col">
-            <h1 className="text-8xl opacity-0 heroTextAnimation skew-y-10 ">Unleash the power</h1>
-            <h2 className="text-6xl opacity-0 heroTextAnimation skew-y-10 ">of SteamScrapper</h2>
+            <h1 className="text-8xl opacity-0 heroTextAnimation max-sm:text-6xl skew-y-10 ">Unleash the power</h1>
+            <h2 className="text-6xl opacity-0 heroTextAnimation max-sm:text-4xl skew-y-10 ">of SteamScrapper</h2>
           </div>
-          <p className="font-normal text-gray-500 opacity-0 skew-y-10 heroTextAnimation">Powerful, self-serve product and growth analytics to help you convert, engage and retain more.</p>
+          <p className="font-normal text-gray-500 opacity-0 skew-y-10 heroTextAnimation">Powerful, self-serve product and growth analytics tool to help you manage your Steam inventory. <br/>Steam market data at your fingertips. And more!</p>
         </div>
-        <div className="flex flex-row text-sm items-start opacity-0 gap-3 heroTextAnimation">
+        <div className="opacity-0 heroTextAnimation">
           <HeroSearch />
-          <ButtonAC />
         </div>
       </div>
     </section>

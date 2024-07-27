@@ -2,7 +2,16 @@ import React from 'react'
 
 const highlights = () => {
   return (
-    <div>highlights</div>
+    <section>
+      <div>
+        <div></div>
+        <div></div>
+      </div>
+      <div>
+        {/* Map out the values to ul */}
+      </div>
+    </section>
+
   )
 }
 

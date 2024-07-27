@@ -3,7 +3,9 @@
     margin: 0 auto;
     text-align: center;
 }
-
+*{
+    user-select: auto;
+}
 body {
     width: 100dvw;
     height:100%;
