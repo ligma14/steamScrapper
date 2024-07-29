@@ -12,10 +12,16 @@ interface Product {
   description: string;
   picUrl: string;
   itemLink: string;
-  priceInfo: string;
+  sellInfo: number;
+  buyInfo: number;
+  quality: string;
 }
 
 const ProductsList: React.FC = () => {
+    const getClassName = (quality: string): string => {
+        return quality
+    }
+
   const [products, setProducts] = useState<Product[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   let startX: number;
@@ -69,7 +75,7 @@ const ProductsList: React.FC = () => {
     onMouseLeave={handleMouseLeave}
     onMouseUp={handleMouseUp}
     onMouseMove={handleMouseMove}
-    className="scrollable-container products-list max-sm:flex-col overflow-x-scroll py-16 flex flex-row gap-3">
+    className="scrollable-container products-list max-sm:flex-col overflow-x-scroll py-16 flex flex-row gap-4">
       {products.map((product) => (
         <ProductCard 
         id = {product.id}
@@ -78,9 +84,13 @@ const ProductsList: React.FC = () => {
         name = {product.name} 
         description = {product.description} 
         picUrl = {product.picUrl}
-        priceInfo = {product.priceInfo}
+        buyInfo = {product.buyInfo}
+        quality = {product.quality}
+        sellInfo={product.sellInfo}
+        className={getClassName(product.quality)}
         />
       ))}
+      <div>test</div>
     </div>
   );
 };

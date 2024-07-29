@@ -1,23 +1,33 @@
+import { color } from 'framer-motion';
 import React from 'react';
+import { useState } from 'react';
 
 interface ProductCardProps {
     id: number;
+    quality: string;
     name: string;
     description: string;
     picUrl: string;
-    priceInfo: string;
-    itemLink: string
+    buyInfo: number;
+    sellInfo: number;
+    itemLink: string;
+    className?: string;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ name, description, picUrl, priceInfo, itemLink }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ name, description, picUrl, buyInfo, sellInfo, itemLink, className, quality}) => {
   return (
-    <div className="product-card text-left flex flex-col gap-3 px-10 py-7 rounded-xl hover:bg-[#151515] transition-all delay-100 duration-200 hover:scale-105">
-        <a className='text-xl font-bold cursor-pointer' href={itemLink}>{name}</a>
-        <p>{description}</p>
-        <div className='bg-[#151515] rounded-xl max-sm:w-auto w-[350px]'>
+    <div className="product-card text-left flex flex-col gap-3 py-6 rounded-xl bg-[#151515] transition-all delay-100 duration-200 hover:scale-95">
+        <div className='px-6 flex flex-col gap-1'>
+            <a className='text-xl font-bold cursor-pointer' href={itemLink}>{name}</a>
+            <p>{description}</p>
+        </div>
+        <div className={`max-sm:w-auto w-[350px] ${className}`}>
             <img src={picUrl}  alt="Loading.."/> 
         </div>
-        <p>{priceInfo}</p>
+        <div className='px-6'>
+            <p>Sell listings starting at ${sellInfo}</p>
+            <p>Buy requests starting at ${buyInfo}</p>
+        </div>
     </div>
   );
 };
