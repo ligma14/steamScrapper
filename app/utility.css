@@ -1,4 +1,4 @@
-#root {
+section, header, footer {
     max-width: 1280px;
     margin: 0 auto;
     text-align: center;
@@ -7,11 +7,15 @@
     user-select: auto;
 }
 body {
-    width: 100dvw;
+    /* width: 100dvw; */
     height:100%;
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
+}
+p{
+    font-weight: 400;
+    color:rgb(107 114 128)
 }
 html, body{
     overflow-x:hidden;
@@ -24,3 +28,15 @@ html, body{
 input[type="search" i]::-webkit-search-cancel-button {
     display: none;
 }
+
+.scrollable-container{
+    cursor: grab;
+}
+
+.scrollable-container.active {
+    cursor: grabbing;
+  }
+  
+  .scrollable-container::-webkit-scrollbar {
+    display: none; 
+  }

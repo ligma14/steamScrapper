@@ -20,7 +20,7 @@ const herosection = () => {
             <h1 className="text-8xl opacity-0 heroTextAnimation max-sm:text-6xl skew-y-10 ">Unleash the power</h1>
             <h2 className="text-6xl opacity-0 heroTextAnimation max-sm:text-4xl skew-y-10 ">of SteamScrapper</h2>
           </div>
-          <p className="font-normal text-gray-500 opacity-0 skew-y-10 heroTextAnimation">Powerful, self-serve product and growth analytics tool to help you manage your Steam inventory. <br/>Steam market data at your fingertips. And more!</p>
+          <p className="font-normal text-gray-500 opacity-0 skew-y-10 heroTextAnimation">Powerful, self-serve product and growth analytics tool to help you manage your Steam collection. <br/>Steam market data at your fingertips. And more!</p>
         </div>
         <div className="opacity-0 heroTextAnimation">
           <HeroSearch />
