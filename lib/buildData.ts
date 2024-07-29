@@ -1,0 +1,64 @@
+export const generateProducts = () => {
+  return [
+    { 
+      "id": 1, 
+      "quality": "q-epic",
+      "name": "Product 1", 
+      "buyInfo": 2.78,
+      "sellInfo": 2.83,
+      "description": "Description for Product 1", 
+      "picUrl": "https://community.akamai.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFU4naLOJzgUuYqyzIaIxa6jMOLXxGkHvcMjibmU99Sg3Qaw-hA_ZWrzLISLMlhpgJJUhGE/360fx360f", 
+      "itemLink": ""
+    },
+    { 
+      "id": 2, 
+      "quality": "q-common",
+      "name": "Product 1", 
+      "buyInfo": 2.78,
+      "sellInfo": 2.83,
+      "description": "Description for Product 1", 
+      "picUrl": "https://community.akamai.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFU4naLOJzgUuYqyzIaIxa6jMOLXxGkHvcMjibmU99Sg3Qaw-hA_ZWrzLISLMlhpgJJUhGE/360fx360f", 
+      "itemLink": ""
+    },
+    { 
+      "id": 3, 
+      "quality": "q-rare",
+      "name": "Product 1", 
+      "buyInfo": 2.78,
+      "sellInfo": 2.83,
+      "description": "Description for Product 1", 
+      "picUrl": "https://community.akamai.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFU4naLOJzgUuYqyzIaIxa6jMOLXxGkHvcMjibmU99Sg3Qaw-hA_ZWrzLISLMlhpgJJUhGE/360fx360f",
+      "itemLink": ""
+    },
+    { 
+      "id": 4, 
+      "quality": "q-legendary",
+      "name": "Product 1", 
+      "buyInfo": 2.78,
+      "sellInfo": 2.83,
+      "description": "Description for Product 1", 
+      "picUrl": "https://community.akamai.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFU4naLOJzgUuYqyzIaIxa6jMOLXxGkHvcMjibmU99Sg3Qaw-hA_ZWrzLISLMlhpgJJUhGE/360fx360f",
+      "itemLink": ""
+    },
+    { 
+      "id": 5, 
+      "quality": "q-common",
+      "name": "Product 1", 
+      "buyInfo": 2.78,
+      "sellInfo": 2.83,
+      "description": "Description for Product 1", 
+      "picUrl": "https://community.akamai.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFU4naLOJzgUuYqyzIaIxa6jMOLXxGkHvcMjibmU99Sg3Qaw-hA_ZWrzLISLMlhpgJJUhGE/360fx360f",
+      "itemLink": ""
+    },
+    { 
+      "id": 6, 
+      "quality": "q-mythical",
+      "name": "Product 1", 
+      "buyInfo": 2.78,
+      "sellInfo": 2.83,
+      "description": "Description for Product 1", 
+      "picUrl": "https://community.akamai.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFU4naLOJzgUuYqyzIaIxa6jMOLXxGkHvcMjibmU99Sg3Qaw-hA_ZWrzLISLMlhpgJJUhGE/360fx360f",
+      "itemLink": ""
+    }  
+  ];
+};

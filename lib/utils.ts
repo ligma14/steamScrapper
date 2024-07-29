@@ -1,5 +1,6 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -10,7 +11,5 @@ export function extractPrice(...elements: any){
 
     if(priceText) return priceText.replace(/[^0-9.]/g,''); // Replacing symbols with '' to get a pure price number
   }
-
   return '';
 }
-

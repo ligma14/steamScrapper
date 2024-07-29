@@ -4,17 +4,19 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import ProductCard from './ProductCard';
+import { generateProducts } from '@/lib/buildData';
+import { buildProductJSON } from '@/lib/test';
 
 
 interface Product {
   id: number;
+  quality: string;
   name: string;
+  buyInfo: number;
+  sellInfo: number;
   description: string;
   picUrl: string;
   itemLink: string;
-  sellInfo: number;
-  buyInfo: number;
-  quality: string;
 }
 
 const ProductsList: React.FC = () => {
@@ -63,9 +65,8 @@ const ProductsList: React.FC = () => {
 
 
   useEffect(() => {
-    fetch('/products.json')
-      .then((response) => response.json())
-      .then((data) => setProducts(data));
+    const productsData = generateProducts();
+    setProducts(productsData);
   }, []);
 
   return (
