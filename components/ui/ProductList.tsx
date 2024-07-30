@@ -12,8 +12,8 @@ interface Product {
   id: number;
   quality: string;
   name: string;
-  buyInfo: number;
-  sellInfo: number;
+  buyInfo: string;
+  sellInfo: string;
   description: string;
   picUrl: string;
   itemLink: string;
@@ -62,11 +62,15 @@ const ProductsList: React.FC = () => {
       containerRef.current.scrollLeft = scrollLeft - walk;
     }
   };
-
+  generateProducts();
 
   useEffect(() => {
-    const productsData = generateProducts();
-    setProducts(productsData);
+    const fetchData = async () => {
+      const productsData = await generateProducts();
+      setProducts(productsData);
+    };
+
+    fetchData();
   }, []);
 
   return (

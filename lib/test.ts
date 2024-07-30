@@ -7,8 +7,8 @@ export const buildProductJSON = () => {
       "id": 0, 
       "quality": "",
       "name": "", 
-      "buyInfo": 0,
-      "sellInfo": 0,
+      "buyInfo": '',
+      "sellInfo": '',
       "description": "", 
       "picUrl": "", 
       "itemLink": ""

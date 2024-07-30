@@ -8,8 +8,8 @@ interface ProductCardProps {
     name: string;
     description: string;
     picUrl: string;
-    buyInfo: number;
-    sellInfo: number;
+    buyInfo: string;
+    sellInfo: string;
     itemLink: string;
     className?: string;
 }
