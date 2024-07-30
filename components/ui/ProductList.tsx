@@ -65,12 +65,16 @@ const ProductsList: React.FC = () => {
   generateProducts();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const productsData = await generateProducts();
-      setProducts(productsData);
-    };
+    // const fetchData = async () => {
+    //   const productsData = await generateProducts();
+    //   setProducts(productsData);
+    // };
 
-    fetchData();
+    // fetchData();
+
+    fetch('/products.json')
+    .then((response) => response.json())
+    .then((data) => setProducts(data));
   }, []);
 
   return (

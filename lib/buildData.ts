@@ -4,12 +4,18 @@ import { headers } from 'next/headers';
 import { stringify } from 'querystring';
 
 export const generateProducts = async () => {
-
-
 try {
-  
+  const config = {
+    headers: {
+      "Access-Control-Allow-Credentials": true,
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET,DELETE,PATCH,POST,PUT",
+      "Access-Control-Allow-Headers": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+    },
+    withCredentials: true
+  }
   // Initial request to get the basic data (specifically item names)
-  const response1 = await axios.get('https://www.steamcommunity.com/market/search/render/?query=&start=0&count=2&norender=1');
+  const response1 = await axios.get('', config)
   const htmlData = response1.data;
 
   // Process the data
@@ -47,7 +53,7 @@ try {
   // Store the generated data in localStorage
   localStorage.setItem('cachedProducts', JSON.stringify(products));
   return productsMain;
-} catch (error) {
+  } catch (error) {
   console.log(error);
 
   // Retrieve the cached data from localStorage
@@ -58,6 +64,5 @@ try {
 
   // Return an empty array in case of an error
   return [];
-}
-
+  }
 };
