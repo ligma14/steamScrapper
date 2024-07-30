@@ -4,6 +4,7 @@ import Highlights from '../components/ui/Highlights'
 import Footer from '../components/ui/Footer'
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { buildProductJSON } from '@/lib/test'
+import { Analytics } from "@vercel/analytics/react"
 
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
         <Footer />
 
         <SpeedInsights />
+        <Analytics/>
     </body>
   );
 }
