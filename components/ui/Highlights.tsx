@@ -1,4 +1,5 @@
 import React from 'react'
+import { generateProducts } from '@/lib/buildData'
 import ProductsList from './ProductList'
 
 const highlights = () => {

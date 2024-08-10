@@ -5,17 +5,9 @@ import { stringify } from 'querystring';
 
 export const generateProducts = async () => {
 try {
-  const config = {
-    headers: {
-      "Access-Control-Allow-Credentials": true,
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET,DELETE,PATCH,POST,PUT",
-      "Access-Control-Allow-Headers": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
-    },
-    withCredentials: true
-  }
+
   // Initial request to get the basic data (specifically item names)
-  const response1 = await axios.get('', config)
+  const response1 = await axios.get('')
   const htmlData = response1.data;
 
   // Process the data

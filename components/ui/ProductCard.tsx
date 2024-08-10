@@ -25,8 +25,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ name, description, picUrl, bu
             <img src={picUrl}  alt="Loading.."/> 
         </div>
         <div className='px-6'>
-            <p>Sell listings starting at ${sellInfo}</p>
-            <p>Buy requests starting at ${buyInfo}</p>
+            <p>Sell listings starting at {sellInfo}</p>
+            <p>Buy requests starting at {buyInfo}</p>
         </div>
     </div>
   );

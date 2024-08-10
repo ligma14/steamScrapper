@@ -1,11 +1,10 @@
 'use client'
-
 // TODO: Add GSAP animation for productCards 29.07
 
 import React, { useEffect, useState, useRef } from 'react';
 import ProductCard from './ProductCard';
+
 import { generateProducts } from '@/lib/buildData';
-import { buildProductJSON } from '@/lib/test';
 
 
 interface Product {
@@ -19,12 +18,14 @@ interface Product {
   itemLink: string;
 }
 
-const ProductsList: React.FC = () => {
+const ProductsList: React.FC = () => {  
     const getClassName = (quality: string): string => {
         return quality
     }
 
   const [products, setProducts] = useState<Product[]>([]);
+  const [test, settest] = useState([]); // TESTING
+
   const containerRef = useRef<HTMLDivElement>(null);
   let startX: number;
   let isDown: boolean;
@@ -62,19 +63,23 @@ const ProductsList: React.FC = () => {
       containerRef.current.scrollLeft = scrollLeft - walk;
     }
   };
-  generateProducts();
 
   useEffect(() => {
     // const fetchData = async () => {
-    //   const productsData = await generateProducts();
+    //   const productsData = await fetch('api/products');
     //   setProducts(productsData);
     // };
 
     // fetchData();
 
-    fetch('/products.json')
-    .then((response) => response.json())
-    .then((data) => setProducts(data));
+    fetch('api/products')
+      .then((response) => response.json())
+      .then((data) => setProducts(data))
+      .catch((error) => console.error('Error fetching products', error))
+
+    // fetch('/products.json')
+    // .then((response) => response.json())
+    // .then((data) => setProducts(data));
   }, []);
 
   return (
