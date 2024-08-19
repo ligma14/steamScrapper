@@ -1,11 +1,7 @@
-'use client'
-// TODO: Add GSAP animation for productCards 29.07
+'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import ProductCard from './ProductCard';
-
-import { generateProducts } from '@/lib/buildData';
-
 
 interface Product {
   id: number;
@@ -19,94 +15,89 @@ interface Product {
 }
 
 const ProductsList: React.FC = () => {  
-    const getClassName = (quality: string): string => {
-        return quality
-    }
-
   const [products, setProducts] = useState<Product[]>([]);
-  const [test, settest] = useState([]); // TESTING
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
-  let startX: number;
-  let isDown: boolean;
-  let scrollLeft: number;
+  const isDown = useRef<boolean>(false);
+  const startX = useRef<number>(0);
+  const scrollLeft = useRef<number>(0);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (containerRef.current) {
-      isDown = true;
-      containerRef.current.classList.add('active');
-      startX = e.pageX - containerRef.current.offsetLeft;
-      scrollLeft = containerRef.current.scrollLeft;
-    }
-  };
-
-  const handleMouseLeave = () => {
-    isDown = false;
-    if (containerRef.current) {
-      containerRef.current.classList.remove('active');
-    }
-  };
-
-  const handleMouseUp = () => {
-    isDown = false;
-    if (containerRef.current) {
-      containerRef.current.classList.remove('active');
-    }
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDown) return;
-    e.preventDefault();
-    if (containerRef.current) {
-      const x = e.pageX - containerRef.current.offsetLeft;
-      const walk = (x - startX) * 1.15; // Multiplied by a ScrollSpeed multiplier
-      containerRef.current.scrollLeft = scrollLeft - walk;
+  const fetchData = async () => {
+    try {
+      const response = await fetch('api/products');
+      const data = await response.json();
+      setProducts(data);
+    } catch (error) {
+      setError('Failed to fetch products');
+      console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    // const fetchData = async () => {
-    //   const productsData = await fetch('api/products');
-    //   setProducts(productsData);
-    // };
-
-    // fetchData();
-
-    fetch('api/products')
-      .then((response) => response.json())
-      .then((data) => setProducts(data))
-      .catch((error) => console.error('Error fetching products', error))
-
-    // fetch('/products.json')
-    // .then((response) => response.json())
-    // .then((data) => setProducts(data));
+    fetchData();
   }, []);
+
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    if (containerRef.current) {
+      isDown.current = true;
+      containerRef.current.classList.add('active');
+      startX.current = e.pageX - containerRef.current.offsetLeft;
+      scrollLeft.current = containerRef.current.scrollLeft;
+    }
+  }, []);
+
+  const handleMouseLeaveOrUp = useCallback(() => {
+    isDown.current = false;
+    if (containerRef.current) {
+      containerRef.current.classList.remove('active');
+    }
+  }, []);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!isDown.current || !containerRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - containerRef.current.offsetLeft;
+    const walk = (x - startX.current) * 1.15; // ScrollSpeed multiplier
+    containerRef.current.scrollLeft = scrollLeft.current - walk;
+  }, []);
+
+  const getClassName = useCallback((quality: string): string => {
+    return quality;
+  }, []);
+
+  if (loading) return <div>Loading products...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <div 
-    ref={containerRef}
-    onMouseDown={handleMouseDown}
-    onMouseLeave={handleMouseLeave}
-    onMouseUp={handleMouseUp}
-    onMouseMove={handleMouseMove}
-    className="scrollable-container products-list max-sm:flex-col overflow-x-scroll py-16 flex flex-row gap-4">
+      ref={containerRef}
+      onMouseDown={handleMouseDown}
+      onMouseLeave={handleMouseLeaveOrUp}
+      onMouseUp={handleMouseLeaveOrUp}
+      onMouseMove={handleMouseMove}
+      className="scrollable-container products-list max-sm:flex-col overflow-x-scroll py-16 flex flex-row gap-4"
+    >
       {products.map((product) => (
         <ProductCard 
-        id = {product.id}
-        key = {product.id}
-        itemLink = {product.itemLink} 
-        name = {product.name} 
-        description = {product.description} 
-        picUrl = {product.picUrl}
-        buyInfo = {product.buyInfo}
-        quality = {product.quality}
-        sellInfo={product.sellInfo}
-        className={getClassName(product.quality)}
+          id={product.id}
+          key={product.id}
+          itemLink={product.itemLink} 
+          name={product.name} 
+          description={product.description} 
+          picUrl={product.picUrl}
+          buyInfo={product.buyInfo}
+          quality={product.quality}
+          sellInfo={product.sellInfo}
+          className={getClassName(product.quality)}
         />
       ))}
-      <div>test</div>
     </div>
   );
 };
 
 export default ProductsList;
+  

@@ -2,64 +2,85 @@ import { NextResponse } from 'next/server';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
-const cache = new Map();
+// In-memory cache with timeout
+const cache = new Map<string, { data: any, timestamp: number }>();
+const CACHE_TIMEOUT = 10 * 60 * 1000; // Cache for 10 minutes
 
+// Delay function
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Fetch data with caching
 async function cachedFetch(url: string) {
-  if (cache.has(url)) {
-    return cache.get(url);
+  const cached = cache.get(url);
+  const now = Date.now();
+
+  if (cached && (now - cached.timestamp < CACHE_TIMEOUT)) {
+    return cached.data;
   }
 
   const response = await axios.get(url);
-  cache.set(url, response.data);
-  return response.data;
+  const data = response.data;
+  cache.set(url, { data, timestamp: now });
+
+  return data;
 }
 
+// Fetch and parse product details
+async function fetchProductDetails(product: any) {
+  try {
+    const html = await cachedFetch(product.itemLink);
+    const $ = cheerio.load(html);
+
+    product.picUrl = $('.market_listing_largeimage img').attr('src') || '';
+    product.description = $('#market_listing_item_name').text() || '';
+
+    return product;
+  } catch (error) {
+    console.error(`Error fetching details for product ${product.name} (ID: ${product.id}):`, error);
+    return product; // Return the original product even if an error occurs
+  }
+}
+
+// Process products in batches to limit concurrent requests
+async function processProductsInBatches(products: any[], batchSize: number, delayMs: number) {
+  const result = [];
+
+  for (let i = 0; i < products.length; i += batchSize) {
+    const batch = products.slice(i, i + batchSize);
+    const processedBatch = await Promise.all(batch.map(fetchProductDetails));
+    result.push(...processedBatch);
+
+    if (i + batchSize < products.length) {
+      await delay(delayMs); // Delay between batches
+    }
+  }
+
+  return result;
+}
+
+// GET handler
 export async function GET() {
   try {
-    // Fetch data from an external API
-    const res = await fetch('https://steamcommunity.com/market/search/render/?query=&start=0&count=5&norender=1');
-    const data = await res.json();
+    const res = await axios.get('https://steamcommunity.com/market/search/render/?query=&start=0&count=5&norender=1');
+    const data = res.data;
 
-    // Data manipulation
-    const initialData = data.results
-    const products = Array.from(initialData).map((el,i)=>({
-      "id": i+1, 
-      "quality": initialData[i].asset_description.background_color === '' ? 'q-common' 
-      : initialData[i].asset_description.background_color === '3C352E' ? 'q-legendary'
-      : initialData[i].asset_description.background_color === '42413e' ? 'q-rare'
-      : initialData[i].asset_description.background_color === '3C352E' ? 'q-legendary'
-      : initialData[i].asset_description.background_color,
-      "name": initialData[i].name, 
-      "buyInfo": '',
-      "sellInfo": initialData[i].sell_price_text,
-      "description": '', 
-      "picUrl": '',
-      "itemLink": `https://www.steamcommunity.com/market/listings/${initialData[i].asset_description.appid}/${encodeURI(initialData[i].name)}`
+    const products = data.results.map((item: any, i: number) => ({
+      id: i + 1,
+      quality:   item.asset_description.background_color === '' ? 'q-common'
+      : item.asset_description.background_color === '3C352E' ? 'q-legendary'
+      : item.asset_description.background_color === '42413e' ? 'q-rare'
+      : item.asset_description.background_color === '3C352E' ? 'q-legendary'
+      : '',
+      name: item.name,
+      sellInfo: item.sell_price_text,
+      description: '',
+      picUrl: '',
+      itemLink: `https://www.steamcommunity.com/market/listings/${item.asset_description.appid}/${encodeURI(item.name)}`
     }));
 
-      // Perform additional request to retrieve the missing data (requesting an individual product page for each product)
-    const productDetailsPromises = products.map(async (product) => {
-      try {
-        const res = await axios.get(product.itemLink); 
-        const extraInfo = res.data;
-        const $ = cheerio.load(extraInfo);
-        console.log('Performing cheerio web scrapping, response status is:', res.status, res.statusText)
-        // Trying to parse response2 to get additional data      
-        product.picUrl = $('.market_listing_largeimage').children('img').eq(0).attr('src')!;
- 
-      
-        return {...product};
-      } catch (error) {
-        console.error(`Error fetching details for product ${product.name, product.id}`, error)
-        return product
-      }
-    })
+    const processedProducts = await processProductsInBatches(products, 3, 2000); // Process in batches of 3 with 2s delay
 
-    const productsMain = await Promise.all(productDetailsPromises);
-    
-    // Return the data as a JSON response
-    console.log(productsMain)
-    return NextResponse.json(productsMain);
+    return NextResponse.json(processedProducts);
 
   } catch (error) {
     console.error('Error fetching products:', error);
