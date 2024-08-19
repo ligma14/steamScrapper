@@ -22,7 +22,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ name, description, picUrl, bu
             <a className='text-xl font-bold cursor-pointer' href={itemLink}>{name}</a>
             <p>{description}</p>
         </div>
-        <div className={`max-sm:w-auto w-[350px] ${className}`}>
+        <div className={`max-sm:w-auto w-[350px ] ${className}`}>
             <Link href={itemLink}>
                 <img src={picUrl}  alt="product_image"/> 
             </Link>

@@ -78,7 +78,7 @@ export async function GET() {
       itemLink: `https://www.steamcommunity.com/market/listings/${item.asset_description.appid}/${encodeURI(item.name)}`
     }));
 
-    const processedProducts = await processProductsInBatches(products, 2, 2000); // Process in batches of 2 with 2s delay
+    const processedProducts = await processProductsInBatches(products, 2, 5000); // Process in batches of 2 with 5s delay
 
     return NextResponse.json(processedProducts);
 
