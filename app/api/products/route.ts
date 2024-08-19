@@ -33,7 +33,6 @@ async function fetchProductDetails(product: any) {
 
     product.picUrl = $('.market_listing_largeimage img').attr('src') || '';
     product.description = $('#market_listing_item_name').text() || '';
-    product.buyInfo = $('')
 
     return product;
   } catch (error) {

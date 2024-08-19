@@ -81,23 +81,33 @@ const ProductsList: React.FC = () => {
       onMouseMove={handleMouseMove}
       className="scrollable-container products-list max-sm:flex-col overflow-x-scroll py-16 flex flex-row gap-4"
     >
-      {products.map((product) => (
-        <ProductCard 
-          id={product.id}
-          key={product.id}
-          itemLink={product.itemLink} 
-          name={product.name} 
-          description={product.description} 
-          picUrl={product.picUrl}
-          buyInfo={product.buyInfo}
-          quality={product.quality}
-          sellInfo={product.sellInfo}
-          className={getClassName(product.quality)}
-        />
-      ))}
+      {loading ? (
+        <div>Loading products...</div>
+      ) : error ? (
+        <div>{error}</div>
+      ) : products.length > 0 ? (
+        products.map((product) => (
+          <ProductCard 
+            id={product.id}
+            key={product.id}
+            itemLink={product.itemLink} 
+            name={product.name} 
+            description={product.description} 
+            picUrl={product.picUrl}
+            buyInfo={product.buyInfo}
+            quality={product.quality}
+            sellInfo={product.sellInfo}
+            className={getClassName(product.quality)}
+          />
+        ))
+      ) : (
+        <div>No products found.</div>
+      )}
     </div>
   );
 };
 
 export default ProductsList;
+
+
   
