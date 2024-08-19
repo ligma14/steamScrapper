@@ -33,6 +33,7 @@ async function fetchProductDetails(product: any) {
 
     product.picUrl = $('.market_listing_largeimage img').attr('src') || '';
     product.description = $('#market_listing_item_name').text() || '';
+    product.buyInfo = $('')
 
     return product;
   } catch (error) {
@@ -78,7 +79,7 @@ export async function GET() {
       itemLink: `https://www.steamcommunity.com/market/listings/${item.asset_description.appid}/${encodeURI(item.name)}`
     }));
 
-    const processedProducts = await processProductsInBatches(products, 3, 2000); // Process in batches of 3 with 2s delay
+    const processedProducts = await processProductsInBatches(products, 2, 2000); // Process in batches of 2 with 2s delay
 
     return NextResponse.json(processedProducts);
 

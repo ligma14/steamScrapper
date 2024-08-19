@@ -1,6 +1,7 @@
 import { color } from 'framer-motion';
 import React from 'react';
 import { useState } from 'react';
+import Link from 'next/link';
 
 interface ProductCardProps {
     id: number;
@@ -22,7 +23,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ name, description, picUrl, bu
             <p>{description}</p>
         </div>
         <div className={`max-sm:w-auto w-[350px] ${className}`}>
-            <img src={picUrl}  alt="Loading.."/> 
+            <Link href={itemLink}>
+                <img src={picUrl}  alt="product_image"/> 
+            </Link>
         </div>
         <div className='px-6'>
             <p>Sell listings starting at {sellInfo}</p>

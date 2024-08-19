@@ -52,7 +52,7 @@ const Footer: React.FC = () => {
 
       <div className="border-t border-gray-800 mt-8 pt-4">
         <div className="container mx-auto text-center text-sm text-gray-400">
-          <p>&copy; {new Date().getFullYear()} this is just an example of a copyright section.</p>
+          <p>&copy; {new Date().getFullYear()} SteamScrapper. This site is not affiliated with Valve, Steam, or any of their partners. All copyrights reserved to their respective owners.</p>
         </div>
       </div>
     </footer>
