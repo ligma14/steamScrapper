@@ -1,13 +1,9 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
-import * as cheerio from 'cheerio';
 
 // In-memory cache with timeout
 const cache = new Map<string, { data: any, timestamp: number }>();
 const CACHE_TIMEOUT = 10 * 60 * 1000; // Cache for 10 minutes
-
-// Delay function
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Fetch data with caching
 async function cachedFetch(url: string) {
@@ -25,39 +21,6 @@ async function cachedFetch(url: string) {
   return data;
 }
 
-// Fetch and parse product details
-async function fetchProductDetails(product: any) {
-  try {
-    const html = await cachedFetch(product.itemLink);
-    const $ = cheerio.load(html);
-
-    product.picUrl = $('.market_listing_largeimage img').attr('src') || '';
-    product.description = $('#market_listing_item_name').text() || '';
-
-    return product;
-  } catch (error) {
-    console.error(`Error fetching details for product ${product.name} (ID: ${product.id}):`, error);
-    return product; // Return the original product even if an error occurs
-  }
-}
-
-// Process products in batches to limit concurrent requests
-async function processProductsInBatches(products: any[], batchSize: number, delayMs: number) {
-  const result = [];
-
-  for (let i = 0; i < products.length; i += batchSize) {
-    const batch = products.slice(i, i + batchSize);
-    const processedBatch = await Promise.all(batch.map(fetchProductDetails));
-    result.push(...processedBatch);
-
-    if (i + batchSize < products.length) {
-      await delay(delayMs); // Delay between batches
-    }
-  }
-
-  return result;
-}
-
 // GET handler
 export async function GET() {
   try {
@@ -66,21 +29,19 @@ export async function GET() {
 
     const products = data.results.map((item: any, i: number) => ({
       id: i + 1,
-      quality:   item.asset_description.background_color === '' ? 'q-common'
-      : item.asset_description.background_color === '3C352E' ? 'q-legendary'
-      : item.asset_description.background_color === '42413e' ? 'q-rare'
-      : item.asset_description.background_color === '3C352E' ? 'q-legendary'
-      : '',
+      quality: item.asset_description.background_color === '' ? 'q-common'
+        : item.asset_description.background_color === '3C352E' ? 'q-legendary'
+        : item.asset_description.background_color === '42413e' ? 'q-rare'
+        : '',
       name: item.name,
       sellInfo: item.sell_price_text,
+      buyInfo: '',
       description: '',
-      picUrl: '',
+      picUrl: `https://community.akamai.steamstatic.com/economy/image/${item.asset_description.icon_url}/360fx360f`,
       itemLink: `https://www.steamcommunity.com/market/listings/${item.asset_description.appid}/${encodeURI(item.name)}`
     }));
 
-    const processedProducts = await processProductsInBatches(products, 2, 5000); // Process in batches of 2 with 5s delay
-
-    return NextResponse.json(processedProducts);
+    return NextResponse.json(products);
 
   } catch (error) {
     console.error('Error fetching products:', error);

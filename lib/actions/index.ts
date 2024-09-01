@@ -1,7 +1,6 @@
 'use server'
 import { connectToDB } from "../mongoose";
 import { scrapeSteamProduct } from "../scrapper";
-import { generateProducts } from "../buildData";
 
 export async function scrapeAndStoreProduct(productUrl: string){
     if(!productUrl) return;
