@@ -77,9 +77,9 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_twitter) - email@example.com
+Feel free to contant me at eugenecoop12@gmail.com
 
-Project Link: [https://github.com/your-username/steam-scrapper](https://github.com/your-username/steam-scrapper)
+Project Link: [https://github.com/ligma14/steam-scrapper](https://github.com/ligma14/steam-scrapper)
 
 ## Acknowledgements
 
