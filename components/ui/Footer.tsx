@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
     <footer className="bg-black text-white py-8 ">
       <div className="container text-sm mx-auto flex flex-col md:flex-row justify-between items-center sm:px-10 px-5">
         {/* Logo and Info */}
-        <div className="mb-6 md:mb-0">
+        <div className="mb-6 md:mb-0 max-sm:text-center max-sm:flex-col">
           <Link href="/">
             <img src='/logo-stsc.svg' alt='logo' />
           </Link>
@@ -34,18 +34,9 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Social Media Icons */}
-        <div className="flex space-x-6 mt-6 md:mt-0">
+        <div className="flex space-x-6 mt-6 md:mt-0 items-center">
           <a href="https://www.github.com" target="_blank" rel="noopener noreferrer" className="opacity-50 hover:opacity-100 transition-all">
             <img src="./github.svg"></img>
-          </a>
-          <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400">
-            <img src=""></img>
-          </a>
-          <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400">
-            <img src=""></img>
-          </a>
-          <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400">
-            <img src=""></img>
           </a>
         </div>
       </div>

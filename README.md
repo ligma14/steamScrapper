@@ -1,25 +1,92 @@
-
 # SteamScrapper
-I made this project just so I could practice my dev skills.
 
-I might be adding more features if I feel like it.
+SteamScrapper is a web application designed to fetch and display data from Steam, with a focus on Counter-Strike 2 items and cases. This project serves as a playground for practicing and showcasing my web development skills.
 
-**Design:** 
-Made by me in Figma
+## Features
 
-**Frontend:**
-NextJS, Tailwind, GSAP animations, Aceternity
+- **Steam Data Scraping**: Utilizes Cheerio and Axiom to parse and extract data from Steam's website.
+- **Item Display**: Presents Steam items and CS2 cases in an intuitive and visually appealing manner.
+- **Search Functionality**: Allows users to search for specific items or cases.
+- **Responsive Design**: Ensures a seamless experience across various devices and screen sizes.
+- **Animations**: Incorporates smooth animations using GSAP for an enhanced user experience.
+- **Data Visualization**: (Planned) Implement charts and graphs to represent item trends and statistics.
 
-**Backend:**
--WIP-
+## Technology Stack
 
-**Planned features:**
-Implement web parsing with Cheerio and Axiom, connect a database, implement NodeMailer email functionality and connect it to CroneJob
+### Frontend
+- **NextJS**: React framework for building the user interface
+- **Tailwind CSS**: Utility-first CSS framework for styling
+- **GSAP**: Library for creating high-performance animations
+- **Framer Motion**: Animation library for React
+- **Aceternity UI**: Component library for sleek UI elements
 
-If you have any ideas feel free to get in touch with me
+### Backend (Work in Progress)
+- **Node.js**: JavaScript runtime for the server-side logic
+- **Cheerio**: Library for parsing and manipulating HTML
+- **Axiom**: HTTP client for making requests to Steam's website
 
+### Planned Additions
+- **Database Integration**: To store and manage scraped data efficiently
+- **NodeMailer**: For implementing email functionality
+- **Cron Jobs**: To automate regular data updates
 
+## Getting Started
 
+### Prerequisites
+- Node.js (v14 or later)
+- npm (v6 or later)
+
+### Installation
+
+1. Clone the repository:
+   ```
+   git clone https://github.com/your-username/steam-scrapper.git
+   cd steam-scrapper
+   ```
+
+2. Install dependencies:
+   ```
+   npm install
+   ```
+
+3. Run the development server:
+   ```
+   npm run dev
+   ```
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+## Deployment
+
+The project is currently deployed on Vercel. You can view the live version at:
+[https://steam-scrapper.vercel.app/](https://steam-scrapper.vercel.app/)
+
+## Contributing
+
+Contributions are welcome! If you have ideas for new features or improvements, feel free to:
+
+1. Fork the repository
+2. Create a new branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## Contact
+
+Your Name - [@your_twitter](https://twitter.com/your_twitter) - email@example.com
+
+Project Link: [https://github.com/your-username/steam-scrapper](https://github.com/your-username/steam-scrapper)
+
+## Acknowledgements
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [GSAP](https://greensock.com/gsap/)
+- [Vercel](https://vercel.com/)
 
 ## Links
 
