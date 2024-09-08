@@ -1,27 +1,29 @@
-import { random } from "gsap";
-import axios from 'axios';
-import * as cheerio from 'cheerio'
-import { config } from "process";
-import { headers } from "next/headers";
-import { extractPrice } from "../utils";
-import { connectToDB } from "../mongoose";
+import { supabase } from '@/lib/supabase';
 
 export async function scrapeSteamProduct(url: string) {
-    if(!url) return;
+  if(!url) return;
 
-    try {
-        // DB connection
-        // connectToDB();
+  try {
+    // Your existing scraping logic here
+    const scrapedData = {
+      name: 'Example Item',
+      quality: 'common',
+      sell_price: 10.99,
+      buy_price: 9.99,
+      description: 'An example item',
+      image_url: 'https://example.com/image.jpg',
+      item_link: url
+    };
 
-        // Fetch the market page
-        const response = await axios.get(url);
-        const $ = cheerio.load(response.data);
- 
-  
+    const { data, error } = await supabase
+      .from('steam_items')
+      .insert([scrapedData])
+      .select();
 
-        console.log($);
+    if (error) throw error;
 
-    } catch (error: any) {
-        throw new Error(`Failed to scrape: ${error.message}`)
-    }
+    return data[0];
+  } catch (error: any) {
+    throw new Error(`Failed to scrape and store: ${error.message}`);
+  }
 }

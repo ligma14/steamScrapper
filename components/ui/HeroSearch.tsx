@@ -1,5 +1,5 @@
 'use client'
-import { scrapeAndStoreProduct } from '@/lib/actions'
+
 import { Input } from './input'
 import { cn } from '@/lib/utils'
 import { FormEvent, useState } from 'react'
@@ -40,9 +40,6 @@ const HeroSearch = () => {
     try {
       setisLoading(true);
 
-      // Scrape here
-      console.log("Initiating scrapper...")
-      const product = await scrapeAndStoreProduct(searchPrompt);
     } catch (error) {
       console.log(error);
     } finally {

@@ -1,45 +1,16 @@
 'use client';
 
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useRef, useCallback } from 'react';
 import ProductCard from './ProductCard';
-
-interface Product {
-  id: number;
-  quality: string;
-  name: string;
-  buyInfo: string;
-  sellInfo: string;
-  description: string;
-  picUrl: string;
-  itemLink: string;
-}
+import { useProducts } from '@/hooks/useProducts';
 
 const ProductsList: React.FC = () => {  
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data, isLoading, isError, error } = useProducts(1, 5);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const isDown = useRef<boolean>(false);
   const startX = useRef<number>(0);
   const scrollLeft = useRef<number>(0);
-
-  const fetchData = async () => {
-    try {
-      const response = await fetch('api/products');
-      const data = await response.json();
-      setProducts(data);
-    } catch (error) {
-      setError('Failed to fetch products');
-      console.error('Error fetching products:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if (containerRef.current) {
@@ -69,8 +40,8 @@ const ProductsList: React.FC = () => {
     return quality;
   }, []);
 
-  if (loading) return <div>Loading products...</div>;
-  if (error) return <div>{error}</div>;
+  if (isLoading) return <div>Loading products...</div>;
+  if (isError) return <div>Error: {error?.message}</div>;
 
   return (
     <div 
@@ -81,22 +52,18 @@ const ProductsList: React.FC = () => {
       onMouseMove={handleMouseMove}
       className="scrollable-container products-list max-sm:flex-col overflow-x-scroll py-16 flex flex-row gap-4"
     >
-      {loading ? (
-        <div>Loading products...</div>
-      ) : error ? (
-        <div>{error}</div>
-      ) : products.length > 0 ? (
-        products.map((product) => (
+      {(data?.products?.length ?? 0) > 0 ? (
+        data?.products?.map((product) => (
           <ProductCard 
-            id={product.id}
-            key={product.id}
-            itemLink={product.itemLink} 
-            name={product.name} 
-            description={product.description} 
-            picUrl={product.picUrl}
-            buyInfo={product.buyInfo}
+            id={parseInt(product.steam_id)}
+            key={product.steam_id}
+            itemLink={product.item_link}
+            name={product.name}
+            description={product.description}
+            picUrl={product.image_url}
+            buyInfo={`$${product.buy_price.toFixed(2)}`}
             quality={product.quality}
-            sellInfo={product.sellInfo}
+            sellInfo={`$${product.sell_price.toFixed(2)}`}
             className={getClassName(product.quality)}
           />
         ))
@@ -109,5 +76,3 @@ const ProductsList: React.FC = () => {
 
 export default ProductsList;
 
-
-  

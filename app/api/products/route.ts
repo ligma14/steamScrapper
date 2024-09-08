@@ -1,50 +1,69 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
+import { createClient } from '@/utils/supabase/server';
 
-// In-memory cache with timeout
-const cache = new Map<string, { data: any, timestamp: number }>();
-const CACHE_TIMEOUT = 10 * 60 * 1000; // Cache for 10 minutes
-
-// Fetch data with caching
-async function cachedFetch(url: string) {
-  const cached = cache.get(url);
-  const now = Date.now();
-
-  if (cached && (now - cached.timestamp < CACHE_TIMEOUT)) {
-    return cached.data;
-  }
-
-  const response = await axios.get(url);
-  const data = response.data;
-  cache.set(url, { data, timestamp: now });
-
-  return data;
+// Helper function to extract numeric price from string
+function extractPrice(priceText: string): number {
+  const match = priceText.match(/\d+(\.\d+)?/);
+  return match ? parseFloat(match[0]) : 0;
 }
 
 // GET handler
-export async function GET() {
-  try {
-    const res = await axios.get('https://steamcommunity.com/market/search/render/?query=&start=0&count=5&norender=1');
-    const data = res.data;
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const page = parseInt(searchParams.get('page') || '1', 10);
+  const limit = parseInt(searchParams.get('limit') || '20', 10);
+  const start = (page - 1) * limit;
 
-    const products = data.results.map((item: any, i: number) => ({
-      id: i + 1,
-      quality: item.asset_description.background_color === '' ? 'q-common'
-        : item.asset_description.background_color === '3C352E' ? 'q-legendary'
-        : item.asset_description.background_color === '42413e' ? 'q-rare'
-        : '',
+
+  try {
+    const supabase = createClient();
+
+    const steamRes = await axios.get(`https://steamcommunity.com/market/search/render/?query=&start=${start}&count=${limit}&norender=1`);
+    const steamData = steamRes.data;
+
+    if (!steamData.results || !Array.isArray(steamData.results)) {
+      throw new Error('Invalid data structure from Steam API');
+    }
+
+    const products = steamData.results.map((item: any) => ({
+      steam_id: item.asset_description?.classid || item.name,
+      quality: item.asset_description?.background_color === '' ? 'q-common'
+        : item.asset_description?.background_color === '3C352E' ? 'q-legendary'
+        : item.asset_description?.background_color === '42413e' ? 'q-rare'
+        : 'q-unknown',
       name: item.name,
-      sellInfo: item.sell_price_text,
-      buyInfo: '',
-      description: '',
-      picUrl: `https://community.akamai.steamstatic.com/economy/image/${item.asset_description.icon_url}/360fx360f`,
-      itemLink: `https://www.steamcommunity.com/market/listings/${item.asset_description.appid}/${encodeURI(item.name)}`
+      sell_price: extractPrice(item.sell_price_text),
+      buy_price: extractPrice(item.sell_price_text),
+      description: item.asset_description?.type || '',
+      image_url: item.asset_description?.icon_url 
+        ? `https://community.akamai.steamstatic.com/economy/image/${item.asset_description.icon_url}/360fx360f`
+        : '',
+      item_link: `https://steamcommunity.com/market/listings/${item.asset_description?.appid || '753'}/${encodeURIComponent(item.name)}`,
+      updated_at: new Date().toISOString()
     }));
 
-    return NextResponse.json(products);
+    const { data: insertedData, error } = await supabase
+      .from('scrapeditems')
+      .upsert(products, { onConflict: 'steam_id' })
+      .select();
 
-  } catch (error) {
-    console.error('Error fetching products:', error);
-    return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 });
+    if (error) {
+      throw new Error(`Failed to insert/update products: ${error.message}`);
+    }
+
+    return NextResponse.json({
+      products: insertedData,
+      totalCount: steamData.total_count,
+      page,
+      limit
+    });
+
+  } catch (error: any) {
+    console.error('Error in GET handler:', error);
+    return NextResponse.json({ 
+      error: 'An error occurred',
+      message: error.message
+    }, { status: 500 });
   }
 }
