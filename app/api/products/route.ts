@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
 import { createClient } from '@/utils/supabase/server';
+import { cookies } from 'next/headers';
 
 // Helper function to extract numeric price from string
 function extractPrice(priceText: string): number {
@@ -15,8 +16,8 @@ export async function GET(request: Request) {
   const limit = parseInt(searchParams.get('limit') || '20', 10);
   const start = (page - 1) * limit;
 
-
   try {
+    const cookieStore = cookies();
     const supabase = createClient();
 
     const steamRes = await axios.get(`https://steamcommunity.com/market/search/render/?query=&start=${start}&count=${limit}&norender=1`);
