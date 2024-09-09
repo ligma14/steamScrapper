@@ -10,6 +10,9 @@ SteamScrapper is a web application designed to fetch and display data from Steam
 - **Responsive Design**: Ensures a seamless experience across various devices and screen sizes.
 - **Animations**: Incorporates smooth animations using GSAP for an enhanced user experience.
 - **Data Visualization**: (Planned) Implement charts and graphs to represent item trends and statistics.
+- **Database integraation**: Integrated a Supabase database to store and manage scraped data efficiently.
+- **NodeMailer**: (Planned) Implement email functionality to send notifications to users.
+- **Cron Jobs**: Implemented cron jobs to automate regular data updates. 
 
 ## Technology Stack
 
@@ -26,9 +29,15 @@ SteamScrapper is a web application designed to fetch and display data from Steam
 - **Axiom**: HTTP client for making requests to Steam's website
 
 ### Planned Additions
-- **Database Integration**: To store and manage scraped data efficiently
 - **NodeMailer**: For implementing email functionality
-- **Cron Jobs**: To automate regular data updates
+- **Item comparison tool**: For comparing the prices of items across different markets.
+- **Price history tracking**: For tracking the price history of items over time.
+- **Steam inventory integration**: For displaying the user's Steam inventory and allowing them to view the price of their items.
+- **Community features**: Allow users to share items and discuss prices in the community.
+- **Authentication**: Implement a secure login system for users to access additional features.
+- **Market arbitrage finder**: For finding items that are underpriced on the Steam market and items that are overpriced.
+- **Data export**: Allow users to export data to a CSV file for analysis in other tools.
+
 
 ## Getting Started
 
