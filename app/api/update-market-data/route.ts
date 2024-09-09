@@ -9,10 +9,15 @@ async function updateMarketData() {
         'Content-Type': 'application/json',
       },
     });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     const result = await response.json();
     console.log('Market data update result:', result);
+    return result;
   } catch (error) {
     console.error('Error updating market data:', error);
+    throw error;
   }
 }
 
@@ -20,7 +25,14 @@ async function updateMarketData() {
 cron.schedule('*/20 * * * *', updateMarketData);
 
 export async function GET() {
-  // This endpoint can be used to manually trigger the update
-  await updateMarketData();
-  return NextResponse.json({ message: 'Market data update initiated' });
+  try {
+    const result = await updateMarketData();
+    return NextResponse.json({ message: 'Market data update initiated', result });
+  } catch (error) {
+    console.error('Error in GET handler:', error);
+    return NextResponse.json({ 
+      error: 'An error occurred',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 });
+  }
 }

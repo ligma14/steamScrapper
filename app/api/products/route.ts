@@ -19,102 +19,55 @@ export async function GET(request: Request) {
   const start = (page - 1) * limit;
 
   try {
-    const cookieStore = cookies();
-    const supabase = createClient();
+    const steamRes = await axios.get(`https://steamcommunity.com/market/search/render/?query=&start=${start}&count=${limit}&norender=1`);
+    const steamData = steamRes.data;
 
-    let allProducts: any[] = [];
-    let totalCount = 0;
-    let currentStart = start;
-    let hasMore = true;
-
-    while (hasMore && allProducts.length < limit) {
-      const steamRes = await axios.get(`https://steamcommunity.com/market/search/render/?query=&start=${currentStart}&count=${BATCH_SIZE}&norender=1`);
-      const steamData = steamRes.data;
-
-      if (!steamData.results || !Array.isArray(steamData.results)) {
-        throw new Error('Invalid data structure from Steam API');
-      }
-
-      totalCount = steamData.total_count;
-
-      // Fetch existing data from the database
-      const steamIds = steamData.results.map((item: any) => item.asset_description?.classid || item.name);
-      const { data: existingItems, error: fetchError } = await supabase
-        .from('scrapeditems')
-        .select('steam_id, highest_buy_order')
-        .in('steam_id', steamIds);
-
-      if (fetchError) {
-        throw new Error(`Failed to fetch existing items: ${fetchError.message}`);
-      }
-
-      // Create a map for quick lookup
-      const existingItemsMap = new Map(existingItems.map(item => [item.steam_id, item]));
-
-      const batchProducts = steamData.results.map((item: any) => {
-        const existingItem = existingItemsMap.get(item.asset_description?.classid || item.name);
-        return {
-          steam_id: item.asset_description?.classid || item.name,
-          quality: item.asset_description?.background_color === '' ? 'q-common'
-            : item.asset_description?.background_color === '3C352E' ? 'q-legendary'
-            : item.asset_description?.background_color === '42413e' ? 'q-rare'
-            : 'q-unknown',
-          name: item.name,
-          sell_price: parseFloat(item.sell_price_text.substring(1)),
-          // TODO: Fix the buy price value because we're using repeating values
-          buy_price: existingItem ? existingItem.highest_buy_order : 0, // Use highest_buy_order from database if available
-          description: item.asset_description?.type || '',
-          image_url: item.asset_description?.icon_url 
-            ? `https://community.akamai.steamstatic.com/economy/image/${item.asset_description.icon_url}/360fx360f`
-            : '',
-          item_link: `https://steamcommunity.com/market/listings/${item.asset_description.appid}/${encodeURIComponent(item.name)}`,
-          updated_at: new Date().toISOString(),
-          app_id: item.asset_description?.appid || ''
-        };
-      });
-
-      allProducts = allProducts.concat(batchProducts);
-
-      if (batchProducts.length < BATCH_SIZE || allProducts.length >= limit) {
-        hasMore = false;
-      } else {
-        currentStart += BATCH_SIZE;
-        await sleep(DELAY_BETWEEN_BATCHES);
-      }
+    if (!steamData.results || !Array.isArray(steamData.results)) {
+      throw new Error('Invalid data structure from Steam API');
     }
 
-    // Trim excess products if we've fetched more than the limit
-    allProducts = allProducts.slice(0, limit);
+    const supabase = createClient(cookies());
 
-    // Upsert products in batches
-    for (let i = 0; i < allProducts.length; i += BATCH_SIZE) {
-      const batch = allProducts.slice(i, i + BATCH_SIZE);
-      const { error } = await supabase
-        .from('scrapeditems')
-        .upsert(batch, { onConflict: 'steam_id' });
+    const steamIds = steamData.results.map((item: any) => item.asset_description?.classid || item.name);
+    const { data: existingItems, error: fetchError } = await supabase
+      .from('scrapeditems')
+      .select('steam_id, highest_buy_order, lowest_sell_order')
+      .in('steam_id', steamIds);
 
-      if (error) {
-        throw new Error(`Failed to insert/update products: ${error.message}`);
-      }
+    if (fetchError) throw fetchError;
 
-      if (i + BATCH_SIZE < allProducts.length) {
-        await sleep(DELAY_BETWEEN_BATCHES);
-      }
-    }
+    const existingItemsMap = new Map(existingItems.map(item => [item.steam_id, item]));
+
+    const products = steamData.results.map((item: any) => {
+      const existingItem = existingItemsMap.get(item.asset_description?.classid || item.name);
+      return {
+        steam_id: item.asset_description?.classid || item.name,
+        quality: item.asset_description?.background_color === '' ? 'q-common'
+          : item.asset_description?.background_color === '3C352E' ? 'q-legendary'
+          : item.asset_description?.background_color === '42413e' ? 'q-rare'
+          : 'q-unknown',
+        name: item.name,
+        sell_price: parseFloat(item.sell_price_text.substring(1)),
+        buy_price: existingItem ? existingItem.highest_buy_order : 0,
+        description: item.asset_description?.type || '',
+        image_url: item.asset_description?.icon_url 
+          ? `https://community.akamai.steamstatic.com/economy/image/${item.asset_description.icon_url}/360fx360f`
+          : '',
+        item_link: `https://steamcommunity.com/market/listings/${item.asset_description.appid}/${encodeURIComponent(item.name)}`,
+        updated_at: new Date().toISOString(),
+        app_id: item.asset_description?.appid || ''
+      };
+    });
 
     return NextResponse.json({
-      products: allProducts,
-      totalCount: totalCount,
+      products,
+      totalCount: steamData.total_count,
       page,
       limit
     });
-
-  } catch (error: any) {
-    console.error('Error in GET handler:', error);
-    return NextResponse.json({ 
-      error: 'An error occurred',
-      message: error.message
-    }, { status: 500 });
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 });
   }
 }
 
@@ -152,7 +105,7 @@ async function fetchMarketLoadOrderSpread(url: string): Promise<number | null> {
 
 async function updateProducts() {
   const cookieStore = cookies();
-  const supabase = createClient();
+  const supabase = createClient(cookieStore);
 
   let count = 0;
   let hasMore = true;
