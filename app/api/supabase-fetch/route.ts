@@ -10,7 +10,7 @@ export async function GET() {
     const { data, error } = await supabase
       .from('steam_items')
       .select('*')
-      .limit(5);
+      .limit(6);
 
     if (error) throw error;
 
