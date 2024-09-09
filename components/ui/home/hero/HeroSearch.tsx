@@ -2,7 +2,7 @@
 
 import { Input } from './input'
 import { cn } from '@/lib/utils'
-import { FormEvent, useState } from 'react'
+import { useState } from 'react'
 
 const isValidProductLinkURL = (url: string) => {
   try {

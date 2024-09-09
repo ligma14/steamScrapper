@@ -1,4 +1,5 @@
 import React from 'react'
+import { Skeleton } from '@/components/ui/shadcn/skeleton'
 import ProductsList from './ProductList'
 
 const highlights = () => {

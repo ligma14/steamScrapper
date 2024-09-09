@@ -37,23 +37,41 @@ export async function GET(request: Request) {
 
       totalCount = steamData.total_count;
 
-      const batchProducts = steamData.results.map((item: any) => ({
-        steam_id: item.asset_description?.classid || item.name,
-        quality: item.asset_description?.background_color === '' ? 'q-common'
-        : item.asset_description?.background_color === '3C352E' ? 'q-legendary'
-        : item.asset_description?.background_color === '42413e' ? 'q-rare'
-        : 'q-unknown',
-        name: item.name,
-        sell_price: parseFloat(item.sell_price_text.substring(1)),
-        buy_price: item.sale_price_text ? parseFloat(item.sale_price_text.substring(1)) : 0,
-        description: item.asset_description?.type || '',
-        image_url: item.asset_description?.icon_url 
-          ? `https://community.akamai.steamstatic.com/economy/image/${item.asset_description.icon_url}/360fx360f`
-          : '',
-        item_link: `https://steamcommunity.com/market/listings/${item.asset_description.appid}/${encodeURIComponent(item.name)}`,
-        updated_at: new Date().toISOString(),
-        app_id: item.asset_description?.appid || ''
-      }));
+      // Fetch existing data from the database
+      const steamIds = steamData.results.map((item: any) => item.asset_description?.classid || item.name);
+      const { data: existingItems, error: fetchError } = await supabase
+        .from('scrapeditems')
+        .select('steam_id, highest_buy_order')
+        .in('steam_id', steamIds);
+
+      if (fetchError) {
+        throw new Error(`Failed to fetch existing items: ${fetchError.message}`);
+      }
+
+      // Create a map for quick lookup
+      const existingItemsMap = new Map(existingItems.map(item => [item.steam_id, item]));
+
+      const batchProducts = steamData.results.map((item: any) => {
+        const existingItem = existingItemsMap.get(item.asset_description?.classid || item.name);
+        return {
+          steam_id: item.asset_description?.classid || item.name,
+          quality: item.asset_description?.background_color === '' ? 'q-common'
+            : item.asset_description?.background_color === '3C352E' ? 'q-legendary'
+            : item.asset_description?.background_color === '42413e' ? 'q-rare'
+            : 'q-unknown',
+          name: item.name,
+          sell_price: parseFloat(item.sell_price_text.substring(1)),
+          // TODO: Fix the buy price value because we're using repeating values
+          buy_price: existingItem ? existingItem.highest_buy_order : 0, // Use highest_buy_order from database if available
+          description: item.asset_description?.type || '',
+          image_url: item.asset_description?.icon_url 
+            ? `https://community.akamai.steamstatic.com/economy/image/${item.asset_description.icon_url}/360fx360f`
+            : '',
+          item_link: `https://steamcommunity.com/market/listings/${item.asset_description.appid}/${encodeURIComponent(item.name)}`,
+          updated_at: new Date().toISOString(),
+          app_id: item.asset_description?.appid || ''
+        };
+      });
 
       allProducts = allProducts.concat(batchProducts);
 

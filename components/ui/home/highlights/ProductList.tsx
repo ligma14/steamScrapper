@@ -2,7 +2,9 @@
 
 import React, { useRef, useCallback } from 'react';
 import ProductCard from './ProductCard';
+import ProductCardSkeleton from './ProductCardSkeleton';
 import { useProducts } from '@/hooks/useProducts';
+import { Skeleton } from '../../shadcn/skeleton';
 
 const ProductsList: React.FC = () => {  
   const { data, isLoading, isError, error } = useProducts(1, 5);
@@ -40,9 +42,6 @@ const ProductsList: React.FC = () => {
     return quality;
   }, []);
 
-  if (isLoading) return <div>Loading products...</div>;
-  if (isError) return <div>Error: {error?.message}</div>;
-
   return (
     <div 
       ref={containerRef}
@@ -52,7 +51,11 @@ const ProductsList: React.FC = () => {
       onMouseMove={handleMouseMove}
       className="scrollable-container products-list max-sm:flex-col overflow-x-scroll py-16 flex flex-row gap-4"
     >
-      {(data?.products?.length ?? 0) > 0 ? (
+      {isLoading ? (
+        Array(5).fill(0).map((_, index) => (
+          <ProductCardSkeleton key={index} />
+        ))
+      ) : (data?.products?.length ?? 0) > 0 ? (
         data?.products?.map((product) => (
           <ProductCard 
             id={parseInt(product.steam_id)}
@@ -71,6 +74,7 @@ const ProductsList: React.FC = () => {
         <div>No products found.</div>
       )}
     </div>
+
   );
 };
 

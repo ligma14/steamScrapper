@@ -4,6 +4,7 @@
 
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import { Skeleton } from "@/components/ui/shadcn/skeleton";
 import HeroSearch from "./HeroSearch";
 
 const herosection = () => {
