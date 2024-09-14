@@ -5,7 +5,7 @@ import { cookies } from 'next/headers'
 export async function GET() {
   try {
     const cookieStore = cookies();
-    const supabase = createClient();
+    const supabase = createClient(cookieStore);
 
     const { data, error } = await supabase
       .from('steam_items')
