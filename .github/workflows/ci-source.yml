@@ -1,0 +1,26 @@
+name: Protect Main Branch and Enforce Linting
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  linting_and_branch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+      - name: Install dependencies
+        run: npm install
+      - name: Check for required reviews
+        run: |
+          if [[ $(curl -s https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }}/reviews | jq '.[].state' | grep -c 'APPROVED') -eq 0 ]]; then
+            echo "At least one approving review is required for merging."
+            exit 1
+          fi
+      - name: Run ESLint
+        run: npm run lint
+
