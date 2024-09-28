@@ -8,4 +8,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Request to api endpoint
-        run: curl -X GET "https://steam-scrapper.vercel.app/api/update-market-data
+        run: curl -X GET "https://steam-scrapper.vercel.app/api/update-market-data"
