@@ -1,0 +1,11 @@
+name: Cron Job // Update market data
+on:
+  schedule:
+    - cron: '0 * * * *' # This will run the workflow every hour
+
+jobs:
+  hit-api-endpoint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Request to api endpoint
+        run: curl -X GET "https://steam-scrapper.vercel.app/api/update-market-data

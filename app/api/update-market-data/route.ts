@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import cron from 'node-cron';
 
 async function updateMarketData() {
   try {
+    console.log(`Fetching from: ${process.env.NEXT_PUBLIC_API_URL}/api/products`);
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`, { 
       method: 'POST',
       headers: {
@@ -10,7 +10,8 @@ async function updateMarketData() {
       },
     });
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorBody = await response.text(); // Log the response body
+      throw new Error(`HTTP error! status: ${response.status}, body: ${errorBody}`);
     }
     const result = await response.json();
     console.log('Market data update result:', result);
@@ -20,9 +21,6 @@ async function updateMarketData() {
     throw error;
   }
 }
-
-// Schedule the task to run every 20 minutes
-cron.schedule('*/20 * * * *', updateMarketData);
 
 export async function GET() {
   try {

@@ -34,7 +34,7 @@ export async function GET(request: Request) {
       .select('steam_id, highest_buy_order, lowest_sell_order')
       .in('steam_id', steamIds);
 
-    if (fetchError) throw fetchError;
+    if (fetchError) throw new Error(`Supabase fetch error: ${fetchError.message}`);
 
     const existingItemsMap = new Map(existingItems.map(item => [item.steam_id, item]));
 
@@ -67,7 +67,7 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error fetching products:', error);
-    return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 });
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'Failed to fetch products' }, { status: 500 });
   }
 }
 
@@ -214,8 +214,8 @@ export async function POST(request: Request) {
     console.error('Error in POST handler:', error);
     return NextResponse.json({ 
       success: false,
-      error: 'An error occurred',
-      message: error.message
+      error: error instanceof Error ? error.message : 'An error occurred',
+      message: 'Failed to update products'
     }, { status: 500 });
   }
 }

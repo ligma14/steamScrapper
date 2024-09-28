@@ -101,12 +101,3 @@ Project Link: [https://github.com/ligma14/steam-scrapper](https://github.com/lig
 
 Vercel-app:
 https://steam-scrapper.vercel.app/
-
-
-## Installation
-
-Make sure to install all the dependencies
-
-`> npm install`
-
-`> npm run dev`

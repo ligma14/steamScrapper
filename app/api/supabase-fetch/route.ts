@@ -8,7 +8,7 @@ export async function GET() {
     const supabase = createClient(cookieStore);
 
     const { data, error } = await supabase
-      .from('steam_items')
+      .from('scrapeditems')
       .select('*')
       .limit(6);
 
