@@ -3,7 +3,7 @@ name: Protect Main Branch and Enforce Linting
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   linting_and_branch:
