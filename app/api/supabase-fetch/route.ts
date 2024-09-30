@@ -3,7 +3,7 @@ import { createClient } from '@/utils/supabase/server';
 
 export async function GET() {
   try {
-    const supabase = createClient();
+    const supabase = createClient(); // Pass cookies to the Supabase client
 
     const { data, error } = await supabase
       .from('scrapeditems')

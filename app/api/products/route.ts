@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { createClient } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
 
 const BATCH_SIZE = 10;
 const DELAY_BETWEEN_BATCHES = 10000; // 10 seconds
@@ -28,7 +27,7 @@ export async function GET(request: Request) {
 
     const supabase = createClient();
 
-    const steamIds = steamData.results.map((item: any) => item.asset_description?.classid || item.name);
+    const steamIds = steamData.results.map((item) => item.asset_description?.classid || item.name);
     const { data: existingItems, error: fetchError } = await supabase
       .from('scrapeditems')
       .select('steam_id, highest_buy_order, lowest_sell_order')
@@ -104,7 +103,6 @@ async function fetchMarketLoadOrderSpread(url: string): Promise<number | null> {
 }
 
 async function updateProducts() {
-  const cookieStore = cookies();
   const supabase = createClient();
 
   let count = 0;
@@ -210,7 +208,7 @@ export async function POST(request: Request) {
   try {
     const result = await updateProducts();
     return NextResponse.json(result);
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error in POST handler:', error);
     return NextResponse.json({ 
       success: false,
