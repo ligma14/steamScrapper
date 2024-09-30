@@ -1,55 +1,67 @@
-'use client'
+// components/ui/authentication/Auth.tsx
+'use client';
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 export default function Auth() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const router = useRouter()
-  const supabase = createClientComponentClient()
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const router = useRouter();
+  const supabase = createClientComponentClient();
 
   const handleSignUp = async () => {
-    await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: `${location.origin}/auth/callback`,
       },
-    })
-    router.refresh()
-  }
+    });
+    if (error) {
+      console.error('Error signing up:', error.message);
+    } else {
+      router.refresh();
+    }
+  };
 
   const handleSignIn = async () => {
-    await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
-    })
-    router.refresh()
-  }
+    });
+    if (error) {
+      console.error('Error signing in:', error.message);
+    } else {
+      router.refresh();
+    }
+  };
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    router.refresh()
-  }
+    await supabase.auth.signOut();
+    router.refresh();
+  };
 
   return (
     <div>
       <input
+        type="email"
         name="email"
         onChange={(e) => setEmail(e.target.value)}
         value={email}
+        placeholder="Email"
       />
       <input
         type="password"
         name="password"
         onChange={(e) => setPassword(e.target.value)}
         value={password}
+        placeholder="Password"
       />
-      <button onClick={handleSignUp}>Sign up</button>
-      <button onClick={handleSignIn}>Sign in</button>
-      <button onClick={handleSignOut}>Sign out</button>
+      <button onClick={handleSignIn}>Sign In</button>
+      <button onClick={handleSignUp}>Sign Up</button>
+      <button onClick={handleSignOut}>Sign Out</button>
     </div>
-  )
+  );
 }

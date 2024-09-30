@@ -2,7 +2,7 @@ import React from 'react';
 import { Skeleton } from '@/components/ui/shadcn/skeleton';
 
 const ProductCardSkeleton: React.FC = () => (
-  <div className="product-card text-left flex flex-col max-sm:items-center gap-3 py-6 rounded-xl bg-[#151515]">
+  <div className="product-card text-left flex flex-col max-sm:items-center gap-3 py-6 rounded-xl bg-[rgba(21,21,25,0.5)]">
     <div className='px-6 flex flex-col gap-1'>
       <Skeleton className="h-6 w-3/4 mb-2" />
       <Skeleton className="h-4 w-1/2" />

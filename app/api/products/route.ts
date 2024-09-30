@@ -26,7 +26,7 @@ export async function GET(request: Request) {
       throw new Error('Invalid data structure from Steam API');
     }
 
-    const supabase = createClient(cookies());
+    const supabase = createClient();
 
     const steamIds = steamData.results.map((item: any) => item.asset_description?.classid || item.name);
     const { data: existingItems, error: fetchError } = await supabase
@@ -105,7 +105,7 @@ async function fetchMarketLoadOrderSpread(url: string): Promise<number | null> {
 
 async function updateProducts() {
   const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = createClient();
 
   let count = 0;
   let hasMore = true;

@@ -22,7 +22,16 @@ async function updateMarketData() {
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  // Check for a specific token or IP address
+  const token = request.headers.get('Authorization');
+  if (token !== process.env.ADMIN_API_TOKEN) {
+    return NextResponse.json({
+      error: 'Unauthorized access',
+      message: 'You do not have permission to access this endpoint.'
+    }, { status: 403 });
+  }
+
   try {
     const result = await updateMarketData();
     return NextResponse.json({ message: 'Market data update initiated', result });
