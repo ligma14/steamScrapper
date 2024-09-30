@@ -5,7 +5,6 @@ import Link from "next/link"
 
 import { Button } from "@/components/ui/shadcn/button"
 import { Input } from "@/components/ui/shadcn/input"
-import { Label } from "@/components/ui/shadcn/label"
 import { formSchema } from "./zod"
 import {
   Form,

@@ -43,11 +43,8 @@
     "react-query": "^3.39.3",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
-<<<<<<< HEAD
+    "ts-node": "^10.9.2",
     "zod": "^3.23.8"
-=======
-    "ts-node": "^10.9.2"
->>>>>>> f0a99e4946b7d4362497e977fa9b172c640c1984
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
